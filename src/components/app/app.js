@@ -5,7 +5,7 @@ import Header from '../header'
 import './app.css'
 
 function App() {
-  a = 2;
+  a = 3;
   return (
     <section className="todoapp">
       <Header />
