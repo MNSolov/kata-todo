@@ -19,8 +19,7 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix --color",
     "format": "prettier ./src -write",
-    "prepare": "husky",
-    "lint-staged": "lint-staged"
+    "prepare": "husky"
   },
   "eslintConfig": {
     "env": {
@@ -152,11 +151,6 @@
     "endOfLine": "lf",
     "printWidth": 120,
     "semi": false
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.js": ["npm run lint:fix", "git add"]
