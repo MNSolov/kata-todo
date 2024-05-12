@@ -50,8 +50,6 @@ button::-moz-focus-inner {
 	color: #737373;
 }
 
-
-
 .todo-list li .toggle + label {
 	/*
 		Firefox requires `#` to be escaped - https://bugzilla.mozilla.org/show_bug.cgi?id=922433
@@ -136,4 +134,15 @@ button::-moz-focus-inner {
 
 .todo-list li .icon-edit:after {
   content: '✎';
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.toggle-all,
+	.todo-list li .toggle {
+		background: none;
+	}
+
+	.todo-list li .toggle {
+		height: 40px;
+	}
 }

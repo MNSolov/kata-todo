@@ -3,16 +3,16 @@ import React from 'react'
 
 import './task.css'
 
-function Task({ description, timeCreated }) {
+function Task({ description, timeCreated, checked, onDeleted, onCompleted }) {
   return (
     <div className="view">
-      <input className="toggle" type="chekbox" />
+      <input type="checkbox" className="toggle" onClick={onCompleted} checked={checked} />
       <label htmlFor="taskText">
         <span className="description">{description}</span>
         <span className="created">{timeCreated}</span>
       </label>
       <button className="icon icon-edit" type="button" aria-label="Edit" />
-      <button className="icon icon-destroy" type="button" aria-label="Destroy" />
+      <button className="icon icon-destroy" type="button" aria-label="Destroy" onClick={onDeleted} />
     </div>
   )
 }
