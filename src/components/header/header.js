@@ -1,14 +1,36 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 
 import './header.css'
 
-function Header() {
-  return (
-    <header>
-      <h1>Todos</h1>
-      <input className="new-todo" placeholder="What needs to be done?" />
-    </header>
-  )
-}
+export default class Header extends PureComponent {
+  constructor() {
+    super()
+    this.state = { inputValue: '' }
+    this.onKeyDown = (event) => {
+      if (event.code === 'Enter') {
+        const { onAddTask } = this.props
+        onAddTask(event.target.value)
+        this.setState({ inputValue: '' })
+      }
+    }
+    this.onValueChange = (event) => {
+      this.setState({ inputValue: event.target.value })
+    }
+  }
 
-export default Header
+  render() {
+    const { inputValue } = this.state
+    return (
+      <header>
+        <h1>Todos</h1>
+        <input
+          className="new-todo"
+          placeholder="What needs to be done?"
+          onKeyDown={this.onKeyDown}
+          onChange={this.onValueChange}
+          value={inputValue}
+        />
+      </header>
+    )
+  }
+}
