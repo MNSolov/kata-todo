@@ -8,9 +8,11 @@ export default class Header extends PureComponent {
     this.state = { inputValue: '' }
     this.onKeyDown = (event) => {
       if (event.code === 'Enter') {
-        const { onAddTask } = this.props
-        onAddTask(event.target.value)
-        this.setState({ inputValue: '' })
+        if (event.target.value) {
+          const { onAddTask } = this.props
+          onAddTask(event.target.value)
+          this.setState({ inputValue: '' })
+        }
       }
     }
     this.onValueChange = (event) => {

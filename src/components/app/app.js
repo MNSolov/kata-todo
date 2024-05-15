@@ -17,15 +17,18 @@ export default class App extends Component {
       this.countId += 1
       return {
         id: this.countId,
-        typeTask: '',
+        typeTask: 'active',
         description: textTask,
         timeCreated: new Date(),
         timeDistance: formatDistance(new Date(), new Date(), { includeSeconds: true }),
+        isEdited: false,
+        isVisible: true,
       }
     }
 
     this.state = {
       taskList: [this.createTask('Active task 1'), this.createTask('Active task 2'), this.createTask('Active task 3')],
+      filter: 'all',
     }
 
     this.deleteTask = (id) => {
@@ -40,10 +43,10 @@ export default class App extends Component {
       this.setState(({ taskList }) => {
         const numberTask = taskList.findIndex((item) => item.id === id)
         const result = [...taskList]
-        if (!result[numberTask].typeTask) {
+        if (result[numberTask].typeTask === 'active') {
           result[numberTask].typeTask = 'completed'
         } else {
-          result[numberTask].typeTask = ''
+          result[numberTask].typeTask = 'active'
         }
         return { taskList: result }
       })
@@ -59,7 +62,7 @@ export default class App extends Component {
 
     this.clearComplete = () => {
       this.setState(({ taskList }) => {
-        const result = taskList.filter((item) => item.typeTask === '')
+        const result = taskList.filter((item) => item.typeTask === 'active' || item.typeTask === 'editing')
         return { taskList: result }
       })
     }
@@ -76,6 +79,42 @@ export default class App extends Component {
         return { taskList: result }
       })
     }
+
+    this.setEditTask = (id) => {
+      this.setState(({ taskList }) => {
+        const numberTask = taskList.findIndex((item) => item.id === id)
+        const result = [...taskList]
+        if (result[numberTask].typeTask !== 'completed') {
+          result[numberTask].typeTask = 'editing'
+        }
+        return { taskList: result }
+      })
+    }
+
+    this.onEditTask = (id, newDescription) => {
+      this.setState(({ taskList }) => {
+        const numberTask = taskList.findIndex((item) => item.id === id)
+        const result = [...taskList]
+        result[numberTask].description = newDescription
+        result[numberTask].typeTask = 'active'
+        result[numberTask].timeCreated = new Date()
+        result[numberTask].timeDistance = formatDistance(new Date(), new Date(), { includeSeconds: true })
+        result[numberTask].isEdited = true
+        return { taskList: result }
+      })
+    }
+
+    this.onClickAll = () => {
+      this.setState({ filter: 'all' })
+    }
+
+    this.onClickActive = () => {
+      this.setState({ filter: 'active' })
+    }
+
+    this.onClickComplete = () => {
+      this.setState({ filter: 'completed' })
+    }
   }
 
   componentDidMount() {
@@ -87,14 +126,27 @@ export default class App extends Component {
   }
 
   render() {
-    const { taskList } = this.state
-    const taskCount = taskList.filter((item) => item.typeTask === '').length
+    const { taskList, filter } = this.state
+    const taskCount = taskList.filter((item) => item.typeTask === 'active' || item.typeTask === 'editing').length
     return (
       <section className="todoapp">
         <Header onAddTask={this.addTask} />
         <section className="main">
-          <TaskList taskList={taskList} onDeleted={this.deleteTask} onCompleted={this.completeTask} />
-          <Footer taskCounter={taskCount} onClearComplete={this.clearComplete} />
+          <TaskList
+            taskList={taskList}
+            onDeleted={this.deleteTask}
+            onCompleted={this.completeTask}
+            onSetEdited={this.setEditTask}
+            onEditTask={this.onEditTask}
+            filter={filter}
+          />
+          <Footer
+            taskCounter={taskCount}
+            onClearComplete={this.clearComplete}
+            onClickAll={this.onClickAll}
+            onClickActive={this.onClickActive}
+            onClickComplete={this.onClickComplete}
+          />
         </section>
       </section>
     )
