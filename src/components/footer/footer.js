@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 
 import TaskFilter from '../task-filter'
 
@@ -17,4 +18,9 @@ export default class Footer extends PureComponent {
       </footer>
     )
   }
+}
+
+Footer.propTypes = {
+  taskCounter: PropTypes.number.isRequired,
+  onClearComplete: PropTypes.func.isRequired,
 }

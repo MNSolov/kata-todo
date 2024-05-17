@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 
 import './task.css'
 
@@ -27,4 +28,11 @@ export default class Task extends PureComponent {
       </div>
     )
   }
+}
+
+Task.propTypes = {
+  description: PropTypes.string.isRequired,
+  isEdited: PropTypes.bool.isRequired,
+  timeCreated: PropTypes.string.isRequired,
+  checked: PropTypes.bool.isRequired,
 }

@@ -27,7 +27,7 @@ export default class App extends Component {
     }
 
     this.state = {
-      taskList: [this.createTask('Active task 1'), this.createTask('Active task 2'), this.createTask('Active task 3')],
+      taskList: [],
       filter: 'all',
     }
 
@@ -82,6 +82,8 @@ export default class App extends Component {
 
     this.setEditTask = (id) => {
       this.setState(({ taskList }) => {
+        const countEditTask = taskList.filter((item) => item.typeTask === 'editing').length
+        if (countEditTask > 0) return { taskList }
         const numberTask = taskList.findIndex((item) => item.id === id)
         const result = [...taskList]
         if (result[numberTask].typeTask !== 'completed') {
@@ -114,6 +116,14 @@ export default class App extends Component {
 
     this.onClickComplete = () => {
       this.setState({ filter: 'completed' })
+      this.setState(({ taskList }) => {
+        const resultIndex = taskList.findIndex((item) => item.typeTask === 'editing')
+        const result = [...taskList]
+        if (resultIndex > -1) {
+          result[resultIndex].typeTask = 'active'
+        }
+        return { taskList: result }
+      })
     }
   }
 
@@ -129,7 +139,7 @@ export default class App extends Component {
     const { taskList, filter } = this.state
     const taskCount = taskList.filter((item) => item.typeTask === 'active' || item.typeTask === 'editing').length
     return (
-      <section className="todoapp">
+      <>
         <Header onAddTask={this.addTask} />
         <section className="main">
           <TaskList
@@ -148,7 +158,7 @@ export default class App extends Component {
             onClickComplete={this.onClickComplete}
           />
         </section>
-      </section>
+      </>
     )
   }
 }

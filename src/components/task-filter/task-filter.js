@@ -49,7 +49,6 @@ export default class TaskFilter extends PureComponent {
 
   render() {
     const { buttonList } = this.state
-    // const { onClickAll, onClickActive, onClickComplete } = this.props
     const buttons = buttonList.map((item) => {
       return (
         <li key={item.id}>

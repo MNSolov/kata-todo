@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 
 import Task from '../task'
 import './task-list.css'
@@ -26,7 +27,6 @@ export default class TaskList extends PureComponent {
     taskElementList = taskElementList.map((item) => {
       const { id, typeTask, description, timeDistance, isEdited } = item
       const checked = typeTask === 'completed'
-
       return (
         <li key={id} className={typeTask === 'active' ? '' : typeTask}>
           <Task
@@ -54,4 +54,13 @@ export default class TaskList extends PureComponent {
 
     return <ul className="todo-list">{taskElementList}</ul>
   }
+}
+
+TaskList.propTypes = {
+  taskList: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  filter: PropTypes.string.isRequired,
+  onDeleted: PropTypes.func.isRequired,
+  onCompleted: PropTypes.func.isRequired,
+  onSetEdited: PropTypes.func.isRequired,
+  onEditTask: PropTypes.func.isRequired,
 }

@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 
 import App from './components/app'
 
-const container = document.getElementById('root')
+const container = document.querySelector('.todoapp')
 
 const root = createRoot(container)
 
