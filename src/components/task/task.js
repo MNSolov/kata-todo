@@ -20,7 +20,12 @@ export default class Task extends PureComponent {
       <div className="view">
         <input type="checkbox" className="toggle" onChange={onCompleted} checked={checked} />
         <label htmlFor="taskText">
-          <span className="description">{description}</span>
+          <span className="title">{description}</span>
+          <span className="description">
+            <button className="icon icon-play" type="button" aria-label="play" />
+            <button className="icon icon-pause" type="button" aria-label="pause" />
+            12:25
+          </span>
           <span className="created">{this.timeCreated(isEdited, timeCreated)}</span>
         </label>
         <button className="icon icon-edit" type="button" aria-label="Edit" onClick={onEdited} />
