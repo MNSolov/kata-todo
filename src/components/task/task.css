@@ -85,11 +85,6 @@ button::-moz-focus-inner {
 	color: #4d4d4d;
 }
 
-.todo-list li.completed label .description {
-	color: #cdcdcd;
-	text-decoration: line-through;
-}
-
 .todo-list li.editing {
 	border-bottom: none;
 	padding: 0;
