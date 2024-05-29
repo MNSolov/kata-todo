@@ -13,7 +13,7 @@ export default class App extends Component {
 
     this.countId = 0
 
-    this.createTask = (textTask) => {
+    this.createTask = (textTask, timeTask) => {
       this.countId += 1
       return {
         id: this.countId,
@@ -23,6 +23,9 @@ export default class App extends Component {
         timeDistance: formatDistance(new Date(), new Date(), { includeSeconds: true }),
         isEdited: false,
         isVisible: true,
+        timeTask,
+        time: Date.now(),
+        isTimer: true,
       }
     }
 
@@ -47,14 +50,15 @@ export default class App extends Component {
           result[numberTask].typeTask = 'completed'
         } else {
           result[numberTask].typeTask = 'active'
+          result[numberTask].time = Date.now()
         }
         return { taskList: result }
       })
     }
 
-    this.addTask = (textTask) => {
+    this.addTask = (textTask, textMin, textSec) => {
       this.setState(({ taskList }) => {
-        const newTask = this.createTask(textTask)
+        const newTask = this.createTask(textTask, 1000 * (Number(textMin) * 60 + Number(textSec)))
         const result = [newTask, ...taskList]
         return { taskList: result }
       })
@@ -97,11 +101,14 @@ export default class App extends Component {
       this.setState(({ taskList }) => {
         const numberTask = taskList.findIndex((item) => item.id === id)
         const result = [...taskList]
-        result[numberTask].description = newDescription
+        if (newDescription) {
+          result[numberTask].description = newDescription
+        }
         result[numberTask].typeTask = 'active'
         result[numberTask].timeCreated = new Date()
         result[numberTask].timeDistance = formatDistance(new Date(), new Date(), { includeSeconds: true })
         result[numberTask].isEdited = true
+        result[numberTask].time = Date.now()
         return { taskList: result }
       })
     }
@@ -125,14 +132,49 @@ export default class App extends Component {
         return { taskList: result }
       })
     }
+
+    this.calcTimer = () => {
+      this.setState(({ taskList }) => {
+        const result = taskList.map((item) => {
+          const newItem = { ...item }
+          if (newItem.isTimer && newItem.typeTask === 'active') {
+            newItem.timeTask += Date.now() - newItem.time
+            newItem.time = Date.now()
+          }
+          return newItem
+        })
+        return { taskList: result }
+      })
+    }
+
+    this.onPauseClick = (id) => {
+      this.setState(({ taskList }) => {
+        const numberTask = taskList.findIndex((item) => item.id === id)
+        const result = [...taskList]
+        result[numberTask].isTimer = false
+        return { taskList: result }
+      })
+    }
+
+    this.onPlayClick = (id) => {
+      this.setState(({ taskList }) => {
+        const numberTask = taskList.findIndex((item) => item.id === id)
+        const result = [...taskList]
+        result[numberTask].time = Date.now()
+        result[numberTask].isTimer = true
+        return { taskList: result }
+      })
+    }
   }
 
   componentDidMount() {
     this.intervalHdlr = setInterval(() => this.calcTaskDistance(), 60000)
+    this.timerHdlr = setInterval(() => this.calcTimer(), 1000)
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalHdlr)
+    clearInterval(this.timerHdlr)
   }
 
   render() {
@@ -149,6 +191,8 @@ export default class App extends Component {
             onSetEdited={this.setEditTask}
             onEditTask={this.onEditTask}
             filter={filter}
+            onPauseClick={this.onPauseClick}
+            onPlayClick={this.onPlayClick}
           />
           <Footer
             taskCounter={taskCount}

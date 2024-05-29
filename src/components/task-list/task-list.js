@@ -15,17 +15,24 @@ export default class TaskList extends PureComponent {
           onEditTask(id, event.target.value)
         }
       }
+      if (event.code === 'Escape') {
+        if (event.target.value) {
+          const { onEditTask } = this.props
+          onEditTask(id)
+        }
+      }
     }
   }
 
   render() {
-    const { taskList, filter, onDeleted, onCompleted, onSetEdited } = this.props
+    const { taskList, filter, onDeleted, onCompleted, onSetEdited, onPauseClick, onPlayClick } = this.props
 
     let taskElementList = taskList.filter(
       (item) => item.typeTask === filter || filter === 'all' || (filter === 'active' && item.typeTask === 'editing')
     )
     taskElementList = taskElementList.map((item) => {
-      const { id, typeTask, description, timeDistance, isEdited } = item
+      const { id, typeTask, description, timeDistance, isEdited, timeTask } = item
+
       const checked = typeTask === 'completed'
       return (
         <li key={id} className={typeTask === 'active' ? '' : typeTask}>
@@ -41,6 +48,13 @@ export default class TaskList extends PureComponent {
             onCompleted={() => {
               onCompleted(id)
             }}
+            onPauseClick={() => {
+              onPauseClick(id)
+            }}
+            onPlayClick={() => {
+              onPlayClick(id)
+            }}
+            timeTask={timeTask}
           />
           <input
             type="text"

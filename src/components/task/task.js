@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
+import { format } from 'date-fns'
 
 import './task.css'
 
@@ -14,7 +15,18 @@ export default class Task extends PureComponent {
   }
 
   render() {
-    const { description, isEdited, timeCreated, checked, onDeleted, onCompleted, onEdited } = this.props
+    const {
+      description,
+      isEdited,
+      timeCreated,
+      checked,
+      onDeleted,
+      onCompleted,
+      onEdited,
+      timeTask,
+      onPauseClick,
+      onPlayClick,
+    } = this.props
 
     return (
       <div className="view">
@@ -22,9 +34,9 @@ export default class Task extends PureComponent {
         <label htmlFor="taskText">
           <span className="title">{description}</span>
           <span className="description">
-            <button className="icon icon-play" type="button" aria-label="play" />
-            <button className="icon icon-pause" type="button" aria-label="pause" />
-            12:25
+            <button className="icon icon-play" type="button" aria-label="play" onClick={onPlayClick} />
+            <button className="icon icon-pause" type="button" aria-label="pause" onClick={onPauseClick} />
+            {format(timeTask, ' mm:ss ')}
           </span>
           <span className="created">{this.timeCreated(isEdited, timeCreated)}</span>
         </label>

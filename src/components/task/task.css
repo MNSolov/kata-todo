@@ -90,8 +90,6 @@ button::-moz-focus-inner {
 	padding: 0;
 }
 
-
-
 .todo-list li.editing .view {
 	display: none;
 }
