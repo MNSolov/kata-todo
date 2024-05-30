@@ -32,6 +32,7 @@ export default class TaskFilter extends PureComponent {
     }
 
     this.onClickButton = (event) => {
+      event.preventDefault()
       this.setState(({ buttonList }) => {
         const result = buttonList.map((item) => {
           const newItem = { ...item }

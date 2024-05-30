@@ -12,7 +12,14 @@ export default class Footer extends PureComponent {
       <footer className="footer">
         <span className="todo-count">{taskCounter} items left</span>
         <TaskFilter onClickAll={onClickAll} onClickActive={onClickActive} onClickComplete={onClickComplete} />
-        <button className="clear-completed" type="button" onClick={onClearComplete}>
+        <button
+          className="clear-completed"
+          type="button"
+          onClick={(event) => {
+            event.preventDefault()
+            onClearComplete()
+          }}
+        >
           Clear completed
         </button>
       </footer>

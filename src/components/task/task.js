@@ -30,17 +30,49 @@ export default class Task extends PureComponent {
 
     return (
       <div className="view">
-        <input type="checkbox" className="toggle" onChange={onCompleted} checked={checked} />
+        <input
+          type="checkbox"
+          className="toggle"
+          onChange={(event) => {
+            event.preventDefault()
+            onCompleted()
+          }}
+          checked={checked}
+        />
         <label htmlFor="taskText">
           <span className="title">{description}</span>
           <span className="description">
-            <button className="icon icon-play" type="button" aria-label="play" onClick={onPlayClick} />
-            <button className="icon icon-pause" type="button" aria-label="pause" onClick={onPauseClick} />
+            <button
+              className="icon icon-play"
+              type="button"
+              aria-label="play"
+              onClick={(event) => {
+                event.preventDefault()
+                onPlayClick()
+              }}
+            />
+            <button
+              className="icon icon-pause"
+              type="button"
+              aria-label="pause"
+              onClick={(event) => {
+                event.preventDefault()
+                onPauseClick()
+              }}
+            />
             {format(timeTask, ' mm:ss ')}
           </span>
           <span className="created">{this.timeCreated(isEdited, timeCreated)}</span>
         </label>
-        <button className="icon icon-edit" type="button" aria-label="Edit" onClick={onEdited} />
+        <button
+          className="icon icon-edit"
+          type="button"
+          aria-label="Edit"
+          onClick={(event) => {
+            event.preventDefault()
+            onEdited()
+          }}
+        />
         <button className="icon icon-destroy" type="button" aria-label="Destroy" onClick={onDeleted} />
       </div>
     )

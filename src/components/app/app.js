@@ -26,6 +26,7 @@ export default class App extends Component {
         timeTask,
         time: Date.now(),
         isTimer: true,
+        ref: React.createRef(),
       }
     }
 
@@ -103,6 +104,8 @@ export default class App extends Component {
         const result = [...taskList]
         if (newDescription) {
           result[numberTask].description = newDescription
+        } else {
+          result[numberTask].ref.current.value = result[numberTask].description
         }
         result[numberTask].typeTask = 'active'
         result[numberTask].timeCreated = new Date()
