@@ -21,11 +21,19 @@ export default class Header extends PureComponent {
     }
 
     this.onMinValueChange = (event) => {
-      this.setState({ inputMinValue: event.target.value })
+      const regExp = /^\d+$/g
+
+      if (regExp.test(event.target.value) || event.target.value === '') {
+        this.setState({ inputMinValue: event.target.value })
+      }
     }
 
     this.onSecValueChange = (event) => {
-      this.setState({ inputSecValue: event.target.value })
+      const regExp = /^\d+$/g
+
+      if (regExp.test(event.target.value) || event.target.value === '') {
+        this.setState({ inputSecValue: event.target.value })
+      }
     }
   }
 
