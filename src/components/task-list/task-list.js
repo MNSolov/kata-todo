@@ -1,100 +1,64 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import Task from '../task'
 import './task-list.css'
 
-export default class TaskList extends PureComponent {
-  constructor() {
-    super()
-
-    this.onKeyDown = (event, id) => {
-      if (event.code === 'Enter') {
-        if (event.target.value) {
-          const { onEditTask } = this.props
-          onEditTask(id, event.target.value)
-        }
-      }
-    }
-
-    this.onPageClick = (event) => {
-      const { onEditTask, taskList } = this.props
-      taskList.forEach((item) => {
-        if (
-          item.ref.current &&
-          !item.ref.current.contains(event.target) &&
-          item.typeTask === 'editing' &&
-          !event.defaultPrevented
-        ) {
-          onEditTask(item.id)
-        }
-      })
-    }
-
-    this.onPageKeyDown = (event) => {
-      if (event.code === 'Escape') {
-        const { onEditTask, taskList } = this.props
-        const numberTask = taskList.findIndex((item) => item.typeTask === 'editing')
-        if (numberTask >= 0) {
-          onEditTask(taskList[numberTask].id)
-        }
-      }
+const onKeyDown = (event, id, props) => {
+  if (event.code === 'Enter') {
+    if (event.target.value) {
+      const { onEditTask } = props
+      onEditTask(id, event.target.value)
     }
   }
+}
 
-  componentDidMount() {
-    this.page = document.querySelector('html')
-    this.page.addEventListener('click', this.onPageClick)
-    this.page.addEventListener('keydown', this.onPageKeyDown)
-  }
+export default function TaskList(props) {
+  const { taskList, filter, onDeleted, onCompleted, onSetEdited, onPauseClick, onPlayClick } = props
 
-  render() {
-    const { taskList, filter, onDeleted, onCompleted, onSetEdited, onPauseClick, onPlayClick } = this.props
+  let taskElementList = taskList.filter(
+    (item) => item.typeTask === filter || filter === 'all' || (filter === 'active' && item.typeTask === 'editing')
+  )
+  taskElementList = taskElementList.map((item) => {
+    const { id, typeTask, description, timeDistance, isEdited, timeTask, ref } = item
 
-    let taskElementList = taskList.filter(
-      (item) => item.typeTask === filter || filter === 'all' || (filter === 'active' && item.typeTask === 'editing')
+    const checked = typeTask === 'completed'
+    return (
+      <li key={id} className={typeTask === 'active' ? '' : typeTask}>
+        <Task
+          description={description}
+          isEdited={isEdited}
+          timeCreated={timeDistance}
+          checked={checked}
+          onEdited={() => {
+            onSetEdited(id)
+          }}
+          onDeleted={() => {
+            onDeleted(id)
+          }}
+          onCompleted={() => {
+            onCompleted(id)
+          }}
+          onPauseClick={() => {
+            onPauseClick(id)
+          }}
+          onPlayClick={() => {
+            onPlayClick(id)
+          }}
+          timeTask={timeTask}
+        />
+        <input
+          type="text"
+          className="edit"
+          defaultValue={description}
+          onKeyDown={(event) => onKeyDown(event, id, props)}
+          ref={ref}
+        />
+      </li>
     )
-    taskElementList = taskElementList.map((item) => {
-      const { id, typeTask, description, timeDistance, isEdited, timeTask, ref } = item
+  })
 
-      const checked = typeTask === 'completed'
-      return (
-        <li key={id} className={typeTask === 'active' ? '' : typeTask}>
-          <Task
-            description={description}
-            isEdited={isEdited}
-            timeCreated={timeDistance}
-            checked={checked}
-            onEdited={() => {
-              onSetEdited(id)
-            }}
-            onDeleted={() => {
-              onDeleted(id)
-            }}
-            onCompleted={() => {
-              onCompleted(id)
-            }}
-            onPauseClick={() => {
-              onPauseClick(id)
-            }}
-            onPlayClick={() => {
-              onPlayClick(id)
-            }}
-            timeTask={timeTask}
-          />
-          <input
-            type="text"
-            className="edit"
-            defaultValue={description}
-            onKeyDown={(event) => this.onKeyDown(event, id)}
-            ref={ref}
-          />
-        </li>
-      )
-    })
-
-    return <ul className="todo-list">{taskElementList}</ul>
-  }
+  return <ul className="todo-list">{taskElementList}</ul>
 }
 
 TaskList.propTypes = {
@@ -103,5 +67,4 @@ TaskList.propTypes = {
   onDeleted: PropTypes.func.isRequired,
   onCompleted: PropTypes.func.isRequired,
   onSetEdited: PropTypes.func.isRequired,
-  onEditTask: PropTypes.func.isRequired,
 }

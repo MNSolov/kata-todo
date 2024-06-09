@@ -1,71 +1,70 @@
-import React, { PureComponent } from 'react'
+import React, { useState } from 'react'
 
 import './header.css'
 
-export default class Header extends PureComponent {
-  constructor() {
-    super()
-    this.state = { inputValue: '', inputMinValue: '', inputSecValue: '' }
-    this.onKeyDown = (event) => {
-      const { inputValue, inputMinValue, inputSecValue } = this.state
-      if (event.code === 'Enter') {
-        if (inputValue) {
-          const { onAddTask } = this.props
-          onAddTask(inputValue, inputMinValue, inputSecValue)
-          this.setState({ inputValue: '', inputMinValue: '', inputSecValue: '' })
-        }
-      }
-    }
-    this.onValueChange = (event) => {
-      this.setState({ inputValue: event.target.value })
-    }
+export default function Header(props) {
+  const [inputValue, setInputValue] = useState('')
+  const [inputMinValue, setInputMinValue] = useState('')
+  const [inputSecValue, setInputSecValue] = useState('')
 
-    this.onMinValueChange = (event) => {
-      const regExp = /^\d+$/g
-
-      if (regExp.test(event.target.value) || event.target.value === '') {
-        this.setState({ inputMinValue: event.target.value })
-      }
-    }
-
-    this.onSecValueChange = (event) => {
-      const regExp = /^\d+$/g
-
-      if (regExp.test(event.target.value) || event.target.value === '') {
-        this.setState({ inputSecValue: event.target.value })
+  const onKeyDown = (event) => {
+    if (event.code === 'Enter') {
+      if (inputValue) {
+        const { onAddTask } = props
+        onAddTask(inputValue, inputMinValue, inputSecValue)
+        setInputValue('')
+        setInputMinValue('')
+        setInputSecValue('')
       }
     }
   }
 
-  render() {
-    const { inputValue, inputMinValue, inputSecValue } = this.state
-    return (
-      <header>
-        <h1>Todos</h1>
-        <form className="new-todo-form">
-          <input
-            className="new-todo"
-            placeholder="What needs to be done?"
-            onKeyDown={this.onKeyDown}
-            onChange={this.onValueChange}
-            value={inputValue}
-          />
-          <input
-            className="new-todo-form__timer"
-            placeholder="Min"
-            onChange={this.onMinValueChange}
-            onKeyDown={this.onKeyDown}
-            value={inputMinValue}
-          />
-          <input
-            className="new-todo-form__timer"
-            placeholder="Sec"
-            onChange={this.onSecValueChange}
-            onKeyDown={this.onKeyDown}
-            value={inputSecValue}
-          />
-        </form>
-      </header>
-    )
+  const onValueChange = (event) => {
+    setInputValue(event.target.value)
   }
+
+  const onMinValueChange = (event) => {
+    const regExp = /^\d+$/g
+
+    if (regExp.test(event.target.value) || event.target.value === '') {
+      setInputMinValue(event.target.value)
+    }
+  }
+
+  const onSecValueChange = (event) => {
+    const regExp = /^\d+$/g
+
+    if (regExp.test(event.target.value) || event.target.value === '') {
+      setInputSecValue(event.target.value)
+    }
+  }
+
+  return (
+    <header>
+      <h1>Todos</h1>
+      <form className="new-todo-form">
+        <input
+          className="new-todo"
+          placeholder="What needs to be done?"
+          onKeyDown={onKeyDown}
+          onChange={onValueChange}
+          value={inputValue}
+        />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Min"
+          onChange={onMinValueChange}
+          onKeyDown={onKeyDown}
+          value={inputMinValue}
+        />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          onChange={onSecValueChange}
+          onKeyDown={onKeyDown}
+          value={inputSecValue}
+        />
+      </form>
+    </header>
+  )
 }
